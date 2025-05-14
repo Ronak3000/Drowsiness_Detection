@@ -5,3 +5,4 @@ deepface
 numpy
 scipy
 opencv-python
+tf-keras
