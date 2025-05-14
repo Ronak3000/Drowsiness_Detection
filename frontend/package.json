@@ -1,0 +1,14 @@
+{
+  "name": "DrowsinessApp",
+  "version": "1.0.0",
+  "main": "App.js",
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-native": "0.72.0",
+    "react-native-camera": "^4.2.1"
+  }
+}
