@@ -1,35 +1,79 @@
-import {React,useState,useRef} from 'react'
-import {View,Text,StyleSheet,Alert} from 'react-native'
-import {RNCamera} from 'react-native-camera'
-import {analyzeFrame} from '../api'
-import StatusOverlay from './StatusOverlay'
+import React, { useState, useEffect, useRef } from 'react'
+import { View, StyleSheet, Text, Platform } from 'react-native'
+import { Camera, useCameraPermissions } from 'expo-camera'
+import * as FaceDetector from 'expo-face-detector'
 
-export default function CameraView(){
-  const [status,setStatus]=useState('loading')
-  const cameraRef=useRef(null)
-  const onReady=async()=>{
-    if(cameraRef.current){
-      const options={quality:0.5,base64:false}
-      const data=await cameraRef.current.takePictureAsync(options)
-      const result=await analyzeFrame(data.uri)
-      setStatus(result.status)
+export default function CameraView() {
+  const [permission, requestPermission] = useCameraPermissions()
+  const cameraRef = useRef(null)
+  const [faces, setFaces] = useState([])
+
+  useEffect(() => {
+    if (Platform.OS !== 'web') {
+      requestPermission()
     }
-    setTimeout(onReady,2000)
+  }, [])
+
+  const handleFacesDetected = ({ faces }) => {
+    setFaces(faces)
   }
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.container}>
+        <Text>Camera not supported on web</Text>
+      </View>
+    )
+  }
+
+  if (!permission) return <View style={styles.container}/>
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text>No camera access</Text>
+      </View>
+    )
+  }
+
   return (
-    <View style={s.container}>
-      <RNCamera
+    <View style={styles.container}>
+      <Camera
         ref={cameraRef}
-        style={s.preview}
-        type={RNCamera.Constants.Type.front}
-        onCameraReady={onReady}
+        style={styles.camera}
+        type={Camera.Constants.Type.front}
+        onFacesDetected={handleFacesDetected}
+        faceDetectorSettings={{
+          mode: FaceDetector.FaceDetectorMode.fast,
+          detectLandmarks: FaceDetector.FaceDetectorLandmarks.none,
+          runClassifications: FaceDetector.FaceDetectorClassifications.none,
+        }}
       />
-      <StatusOverlay status={status}/>
+      <View style={styles.faceInfo}>
+        <Text style={styles.faceText}>
+          {faces.length > 0 ? `Faces detected: ${faces.length}` : 'No faces detected'}
+        </Text>
+      </View>
     </View>
   )
 }
 
-const s=StyleSheet.create({
-  container:{flex:1},
-  preview:{flex:1}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  camera: {
+    flex: 1,
+  },
+  faceInfo: {
+    position: 'absolute',
+    bottom: 50,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    padding: 10,
+    borderRadius: 10,
+  },
+  faceText: {
+    color: '#fff',
+    fontSize: 16,
+  },
 })

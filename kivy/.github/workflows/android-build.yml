@@ -1,0 +1,47 @@
+name: Android APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            openjdk-11-jdk \
+            unzip \
+            zip \
+            python3-pip \
+            git
+
+      - name: Install Buildozer & Cython
+        run: |
+          pip install --upgrade buildozer cython==0.29.33
+
+      - name: Android SDK setup
+        run: |
+          # accept licenses
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+
+      - name: Build APK
+        run: |
+          buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: DrowsinessApp-debug.apk
+          path: bin/android/debug/*.apk
