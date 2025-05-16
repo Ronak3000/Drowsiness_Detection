@@ -15,5 +15,6 @@ Click the link below to use the application:
 You can access the complete project files and documentation from the Google Drive link below:
 
 👉 [Google Drive Link](https://drive.google.com/drive/folders/1em_NCRNeMZM3dsa2xgp3_FAKddfo6RPn?usp=drive_link)
+👉 [Overleaf](https://www.overleaf.com/3518123113tnmcrwrgfmws#a0d804)
 
 
