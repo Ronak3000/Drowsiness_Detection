@@ -8,6 +8,7 @@ Click the link below to use the application:
 
 👉 [Application Link](https://drive.google.com/drive/folders/1MUJAYBr580SqQsKLXa3FajqTqH1mFtUb?usp=sharing)
 👉 [Web Link](https://ronak3000-drow-det-app-isohfw.streamlit.app/)
+👉 [Hugging Face](https://huggingface.co/spaces/Ronakeshu3000/HFspace)
 
 ## 📁 Download Files
 
